@@ -131,6 +131,11 @@ def secant(f, x0, x1, thresh=1E-10, pr = True):
     otherwise, returns None and an error print statement
     '''
 
+
+    if f(x0) * f(x1) > 0:
+        print("Starting boundaries not appropriate, no roots found")
+        return None
+
     x2 = x1 - f(x1) * ((x1 - x0)/(f(x1) - f(x0)))
 
     counter = 1 # Initialize counter for number of iterations
