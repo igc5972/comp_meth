@@ -2,6 +2,8 @@
 ### Can be called from other scripts
 ### [Isabella Cox, Aug. 2020]
 
+### [Task 1]
+
 
 def bisection(f, a, b, thresh=1E-10, pr = True):
 
@@ -18,7 +20,7 @@ def bisection(f, a, b, thresh=1E-10, pr = True):
     pr --      flag for printing out number of iterations required to find the
                root
 
-    Output value:
+    Returns:
 
     location of the root if possible to finding
     can use pr flag to choose to print number of iterations
@@ -80,7 +82,7 @@ def newton(f, xn, thresh = 1E-10, pr = True):
     pr --      flag for printing out number of iterations required to find the
                root
 
-    Output value:
+    Returns:
 
     location of the root if possible to finding
     can use pr flag to choose to print number of iterations
@@ -124,7 +126,7 @@ def secant(f, x0, x1, thresh=1E-10, pr = True):
     pr --      flag for printing out number of iterations required to find the
                root
 
-    Output value:
+    Returns:
 
     location of the root if possible to finding
     can use pr flag to choose to print number of iterations
