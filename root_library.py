@@ -64,6 +64,7 @@ def bisection(f, a, b, thresh=1E-10, pr = True):
     print("Found the root within threshold")
     if pr == True:
         print("Number of Interations taken: " + str(counter))
+        return(new_m, counter)
     return(new_m)
 
 
@@ -107,6 +108,7 @@ def newton(f, xn, thresh = 1E-10, pr = True):
     print("Found the root within threshold")
     if pr == True:
         print("Number of Interations taken: " + str(counter))
+        return(xnn, counter)
     return(xnn)
 
 
@@ -159,6 +161,7 @@ def secant(f, x0, x1, thresh=1E-10, pr = True):
     print("Found the root within threshold")
     if pr == True:
         print("Number of Interations taken: " + str(counter))
+        return(x2, counter)
     return(x2)
 
 
