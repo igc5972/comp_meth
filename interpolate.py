@@ -1,7 +1,6 @@
-### PURPOSE: ASTP 720 (Computational Methods) HW #1
+### PURPOSE: ASTP 720 (Computational Methods) HW #1 Pt. 5
+### Linear, piecewise interpolation code
 ### [Isabella Cox, Aug. 2020]
-
-### [Task 5]
 
 
 def interpolate(xs, ys):
@@ -35,17 +34,3 @@ def interpolate(xs, ys):
     print("test")
 
     return func
-
-
-
-
-
-'''
-x, y = np.loadtxt('lens_density.txt', delimiter = ',', unpack = True, skiprows = 1)
-
-halfs = np.arange(0.5, x[-1], 1) #x-values to interpolate at
-
-func = interpolate(x, y)
-print(func(halfs))
-
-'''

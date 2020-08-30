@@ -1,5 +1,7 @@
-### PURPOSE: ASTP 720 (Computational Methods) HW #1 Pt 2.
+### PURPOSE: ASTP 720 (Computational Methods) HW #1 Pt. 6
+### Test out interpolation method on real data
 ### [Isabella Cox, Aug. 2020]
+
 
 # Import Statements
 import numpy as np
@@ -7,7 +9,6 @@ from matplotlib import pyplot as plt
 import interpolate
 
 
-### [Task 6]
 
 
 # Set up universal plotting formats (text size and such)

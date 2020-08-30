@@ -1,8 +1,7 @@
-### PURPOSE: Three functions for methods of root finding
-### Can be called from other scripts
+### PURPOSE: ASTP 720 (Computational Methods) HW #1 Pt. 1
+### Three functions for root-finding methods
 ### [Isabella Cox, Aug. 2020]
 
-### [Task 1]
 
 
 def bisection(f, a, b, thresh=1E-10, pr = True):
