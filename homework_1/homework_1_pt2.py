@@ -9,7 +9,6 @@ from matplotlib import pyplot as plt
 
 
 # Setup for plotting later
-
 params = {'font.family':  'serif',
          'legend.fontsize': 'small',
          'figure.figsize': (12, 8),
