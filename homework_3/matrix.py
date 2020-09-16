@@ -167,10 +167,9 @@ class Matrix:
 
     def inverse(self):
 
-        uppertri, swaps = self.uppertri()
-        n = uppertri.nrows
+        n = self.nrows
 
-        U = copy.deepcopy(uppertri.M)
+        U = copy.deepcopy(self.M)
 
         iden = (self.identity(self.nrows, self.ncols)).M
 
@@ -289,7 +288,11 @@ class Matrix:
 a= [[2., -3., 1.],
            [2., 0., 1.],
            [1., 4., 5.]]
+print(np.linalg.inv(a))
+
 
 a = Matrix(a)
 
 a.inverse()
+
+print(np.linalg.inv(a))
