@@ -70,11 +70,13 @@ def heuns(dydt, guess, t, dt = False):
     '''
 
     y1 = np.zeros(len(t)) #initialize list to hold solutions
+    y1tilde = np.zeros(len(t))
     y1[0] = guess[0]
 
     y2 = None
     if len(guess) > 1: #2 variable case
         y2 = np.zeros(len(t))
+        y2tilde = np.zeros(len(t))
         y2[0] = guess[1]
 
 
@@ -86,22 +88,21 @@ def heuns(dydt, guess, t, dt = False):
             step = t[i+1] - t[i]
 
         if y2 is not None: #2 variable case
-            y1tilde = y1[i] + step * dydt(t[i], [y1[i], y2[i]])[0]
-            y2tilde = y2[i] + step * dydt(t[i], [y1[i], y2[i]])[1]
+            y1tilde[i+1] = y1[i] + step * dydt(t[i], [y1[i], y2[i]])[0]
+            y2tilde[i+1] = y2[i] + step * dydt(t[i], [y1[i], y2[i]])[1]
 
-            y1[i+1] = y1[i] + 0.5 * step * dydt(t[i], [y1[i], y2[i]])[0] \
-             + dydt(t[i], [y1tilde, y2tilde])[0]
-            y2[i+1] = y2[i] + 0.5 * step * dydt(t[i], [y1[i], y2[i]])[1] \
-             + dydt(t[i], [y1tilde, y2tilde])[1]
+            y1[i+1] = y1[i] + step/2 * (dydt(t[i], [y1[i], y2[i]])[0] \
+             + dydt(t[i], [y1tilde[i+1], y2tilde[i+1]])[0])
+            y2[i+1] = y2[i] + step/2 * (dydt(t[i], [y1[i], y2[i]])[1] \
+             + dydt(t[i], [y1tilde[i+1], y2tilde[i+1]])[1])
 
 
         elif y2 is None:
-            ytilde = y1[i] + step * dydt(t[i], y1[i])
-            y1[i+1] = y1[i] + 0.5 * step * dydt(t[i], y1[i]) + dydt(t[i], ytilde)
+            y1tilde = y1[i] + step * dydt(t[i], y1[i])
+            y1[i+1] = y1[i] + step/2 * (dydt(t[i], y1[i]) + dydt(t[i], y1tilde))
 
 
     return(y1, y2)
-
 
 ###############################################################################
 # Explicit RK45
