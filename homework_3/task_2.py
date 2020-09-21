@@ -25,8 +25,8 @@ T = 100 #K
 ###############################################################################
 
 aul_values  = []
-bulJ_values = []
-bluJ_values = []
+bul_values = []
+blu_values = []
 
 
 for u, l, A in zip(us, ls, As):
@@ -45,36 +45,56 @@ for u, l, A in zip(us, ls, As):
     bluJ = blu*J
 
     aul_values.append(A)
-    bulJ_values.append(bulJ)
-    bluJ_values.append(bluJ)
-
-
-###############################################################################
-#Populate Matrix
-###############################################################################
-
-matrix = np.zeros((3, 3))
-
-matrix[0][0] = bluJ_values[0] + bluJ_values[1]
-matrix[0][1] = - (aul_values[0] + bulJ_values[0])
-matrix[0][2] = - (aul_values[1] + bulJ_values[1])
-matrix[1][0] = - (bluJ_values[0])
-matrix[1][1] = (bulJ_values[0] + aul_values[0] + bulJ_values[2])
-matrix[1][2] = - (bulJ_values[2] + aul_values[2])
-matrix[2][0] = - (bluJ_values[1])
-matrix[2][1] = - (bluJ_values[2])
-matrix[2][2] = (bulJ_values[1] + aul_values[1] + bulJ_values[2] + aul_values[2])
-
+    bul_values.append(bulJ)
+    blu_values.append(bluJ)
 
 ###############################################################################
-#System of Equations to solve
+# Setup system of Equations to solve in matrix form
 ###############################################################################
 
-matrix = matrix
-n = np.zeros((3,1))
-s = np.zeros((3,1))
+
+def value(list, l, u):
+    '''
+    Parameters:
+    list -- list of coefficients (aul_values/bul_values/blu_values)
+    l    -- index of lower term
+    u    -- index of upper term
+
+    Returns:
+    value --
+    '''
+    return [pair[2] for pair in zip(ls, us, list) if pair[0] == l and pair[1] ==u][0]
 
 
+matrix = np.zeros((9, 9))
+
+for r in range(9):
+    for c in range(9):
+
+        if r == 0 and c == 0:
+            matrix[r][c] = value(blu_values, 1, 2) + value(blu_values, 1, 3)
+
+        #not working because cases like
+        if r < c:
+            matrix[r][c] = -(value(bul_values, r, c) + values(aul_values, r, c))
+'''
+        elif r > c:
+            matrix[r][c] = -(value(blu_values, c, r))
+
+        elif r == c:
+            sum = 0
+
+            for j in range(0, 9 -1):
+                sum += value(aul_values, r, j)
+                sum += value(bul_values, r, j)
+                sum += value(blu_values, r, j)
+
+            matrix[r][c] = sum
+
+
+
+'''
+print(matrix)
 ###############################################################################
 #Plot number densities as as function of temperature
 ###############################################################################

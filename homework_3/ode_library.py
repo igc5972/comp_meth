@@ -92,14 +92,16 @@ def heuns(dydt, guess, t, dt = False):
             y2tilde[i+1] = y2[i] + step * dydt(t[i], [y1[i], y2[i]])[1]
 
             y1[i+1] = y1[i] + step/2 * (dydt(t[i], [y1[i], y2[i]])[0] \
-             + dydt(t[i], [y1tilde[i+1], y2tilde[i+1]])[0])
+             + dydt(t[i+1], [y1tilde[i+1], y2tilde[i+1]])[0])
             y2[i+1] = y2[i] + step/2 * (dydt(t[i], [y1[i], y2[i]])[1] \
-             + dydt(t[i], [y1tilde[i+1], y2tilde[i+1]])[1])
+             + dydt(t[i+1], [y1tilde[i+1], y2tilde[i+1]])[1])
 
 
         elif y2 is None:
-            y1tilde = y1[i] + step * dydt(t[i], y1[i])
-            y1[i+1] = y1[i] + step/2 * (dydt(t[i], y1[i]) + dydt(t[i], y1tilde))
+            y1tilde[i+1] = y1[i] + step * dydt(t[i], y1[i])
+
+            y1[i+1] = y1[i] + step/2 * (dydt(t[i], y1[i])  \
+            + dydt(t[i+1], y1tilde[i+1]))
 
 
     return(y1, y2)

@@ -20,7 +20,6 @@ y0 = [np.pi - 0.1, 0.0]
 t = np.linspace(0, 10, 101)
 
 
-
 ###############################################################################
 #Solve with Scipy ODE solver
 ###############################################################################
@@ -42,8 +41,8 @@ def pendulum2(t, y, b=0.25, c=5.0): #my variables are swapped
     dydt = [omega, -b*omega - c*np.sin(theta)]
     return dydt
 
-t_euler, o_euler = euler(pendulum2, y0, t, dt = 0.1)
-t_heuns, o_heuns = heuns(pendulum2, y0, t)
+t_euler, o_euler = euler(pendulum2, y0, t)
+t_heuns, o_heuns = heuns(pendulum2, y0, t, dt = 0.05)
 t_rk4, o_rk4 = rk4(pendulum2, y0, t)
 
 
