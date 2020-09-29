@@ -6,7 +6,7 @@
 
 import numpy as np
 from matplotlib import pyplot as plt
-import random
+import math
 
 ##############################################################################
 ## For Pretty Plotting later on
@@ -24,74 +24,74 @@ plt.rcParams.update(params)
 
 
 ################################################################################
-### Option 1 for generating clumps
+### Information about Clumps
 ################################################################################
 
-#first clump, centered @ (7, 7)
-n1 = 400
-angles1 = np.linspace(0, 2*np.pi, n1)
-x1, y1 = (7, 7)
+#central position of clumps
+c1x, c1y = 7, 7
+c2x, c2y = 8, 2
+
+#radii of clumps
 r1 = 3
-xs1, ys1 = x1 + r1*np.cos(angles1), y1 + r1*np.sin(angles1)
-
-#second clump, centered @ (8, 2)
-n2 = 255
-angles2 = np.linspace(0, 2*np.pi, n1)
-x2, y2 = (8, 2)
 r2 = 2
-xs2, ys2 = x2 + r2*np.cos(angles2), y2 + r2*np.sin(angles2)
+
+#raddi of clumps in units of cm (to match up with units of constant below [cgs])
+r1cm = r1 * 3.086E24
+r2cm = r2 * 3.086E24
+
+#masses of clumps
+mass = 1.988E46 #g = 10E12 solar masses
+m1 = 400 * mass
+m2 = 255 * mass
+
+#densities of clumps
+p1 = m1 / (np.pi * r1cm**2)
+p2 = m2 / (np.pi * r2cm**2)
+
+#constant that encapsulates 4 * pi * G (in cgs units)
+constant = 8.38E-7
+
+################################################################################
+### Setup Grid
+################################################################################
+
+x = np.arange(0, 10, 0.1)
+y = np.arange(0, 10, 0.1)
+X, Y = np.meshgrid(x, y)
+
+rho = np.ones_like(X) #holder for densities everywhere in square
+pot = np.ones_like(X)
+#enforce boundary conditions given in problem
+pot[:][0] = 0
+pot[:][-1] = 0
+pot[0][:] = 0
+pot[-1][:] = 0
+
+#constrain positions of disks
+disk1, disk2 = np.zeros_like(X), np.zeros_like(X)
+disk1 = (X-c1x)**2+(Y-c1y)**2 <= r1**2
+disk2 = (X-c2x)**2+(Y-c2y)**2 <= r2**2
+
+rho[disk1] = p1
+rho[disk2] = p2
 
 
-plt.scatter(xs1, ys1, c = 'red', s=5)  # plot points
-plt.scatter(xs2, ys2, c = 'blue', s=5)  # plot points
-plt.xlim(0, 10)
-plt.ylim(0, 10)
-plt.title('Option 1')
+################################################################################
+### Calculate potentials everywhere
+################################################################################
+
+pot = np.copy(rho) #initalize it as the same as rho
+
+step = 200
+for iter in range(0, 1):
+    for i in range(1, len(x)-1):
+        for j in range(1, len(y)-1):
+            num = pot[i+1][j] + pot[i][j+1] + pot[i-1][j] + pot[i][j-1]
+            den = (4*constant*step*step*rho[i][j])
+            pot[i][j] = num / den
+
+
+fig, ax = plt.subplots(figsize = (6, 6))
+ax.imshow(pot)
 plt.show()
-
-
-################################################################################
-### Option 2 for generating clumps
-################################################################################
-
-#first clump, centered @ (7, 7)
-n1 = 400
-r1 = 3
-x1, y1 = (7, 7)
-xs1, ys1 = [], []
-for n in range(n1):
-    R1 = r1 * np.sqrt(random.random())
-    theta1 = random.random() * 2 * np.pi
-    xs1.append(x1 + R1 * np.cos(theta1))
-    ys1.append(y1 + R1 * np.sin(theta1))
-
-#second clump, centered @ (8, 2)
-r2 = 2
-x2, y2 = (8, 2)
-xs2, ys2 = [], []
-for n in range(n1):
-    R2 = r2 * np.sqrt(random.random())
-    theta2 = random.random() * 2 * np.pi
-    xs2.append(x2 + R2 * np.cos(theta2))
-    ys2.append(y2 + R2 * np.sin(theta2))
-
-
-plt.scatter(xs1, ys1, c = 'red', s=5)  # plot points
-plt.scatter(xs2, ys2, c = 'blue', s=5)  # plot points
-plt.xlim(0, 10)
-plt.ylim(0, 10)
-plt.title('Option 2')
-plt.show()
-
-################################################################################
-### Plotting
-################################################################################
-
-fig, (ax1, ax2) = plt.subplots(nrows = 1, ncols = 2, figsize = (10, 5))
-
-ax1.scatter(xcrds, ycrds)
-ax1.set_xlabel('(x (Mpc)')
-ax1.set_ylabel('(y (Mpc)')
-ax1.set_title('Start (t = 0)')
-
-plt.show()
+#plt.show()
