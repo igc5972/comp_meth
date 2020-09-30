@@ -59,7 +59,7 @@ x = np.arange(0, 10, 0.1)
 y = np.arange(0, 10, 0.1)
 X, Y = np.meshgrid(x, y)
 
-rho = np.ones_like(X) #holder for densities everywhere in square
+rho = np.zeros_like(X) #holder for densities everywhere in square
 pot = np.ones_like(X)
 #enforce boundary conditions given in problem
 pot[:][0] = 0
@@ -82,8 +82,9 @@ rho[disk2] = p2
 
 pot = np.copy(rho) #initalize it as the same as rho
 
-step = 200
-for iter in range(0, 1):
+step = 0.1
+max_time = 100
+for time_step in range(0, max_time):
     for i in range(1, len(x)-1):
         for j in range(1, len(y)-1):
             num = pot[i+1][j] + pot[i][j+1] + pot[i-1][j] + pot[i][j-1]
