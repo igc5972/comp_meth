@@ -45,12 +45,11 @@ m1 = 400 * mass
 m2 = 255 * mass
 
 #densities of clumps
-p1 = m1 / (np.pi * r1cm**2)
-p2 = m2 / (np.pi * r2cm**2)
+p1 = m1 / (np.pi * r1cm**3)
+p2 = m2 / (np.pi * r2cm**3)
 
 #constant that encapsulates 4 * pi * G (in cgs units)
 constant = 8.38E-7
-
 ################################################################################
 ### Setup Grid
 ################################################################################
@@ -82,17 +81,50 @@ rho[disk2] = p2
 
 pot = np.copy(rho) #initalize it as the same as rho
 
+
 step = 0.1
 max_time = 100
-for time_step in range(0, max_time):
+for time_step in range(max_time):
     for i in range(1, len(x)-1):
         for j in range(1, len(y)-1):
-            num = pot[i+1][j] + pot[i][j+1] + pot[i-1][j] + pot[i][j-1]
-            den = (4*constant*step*step*rho[i][j])
-            pot[i][j] = num / den
+            pot[i][j] = (pot[i+1][j] + pot[i][j+1] + pot[i-1][j] + pot[i][j-1] - constant * step**2 * rho[i][j])/4
+            #Enforce boundaries with every iteration
+            #pot[disk1] = p1
+            #pot[disk2] = p2
+            pot[:][0] = 0
+            pot[:][-1] = 0
+            pot[0][:] = 0
+            pot[-1][:] = 0
+################################################################################
+### Plotting
+################################################################################
+
+fig, ax = plt.subplots(figsize = (7, 7))
+
+pos = ax.imshow(pot, cmap = 'jet')
+fig.colorbar(pos, fraction = 0.046, pad = 0.04)
+
+#Plot the galaxy disks
+circ1 = plt.Circle((c1x*10, c1y*10), radius=r1*10, color='r', fill = False)
+circ2 = plt.Circle((c2x*10, c2y*10), radius=r2*10, color='r', fill = False)
+
+ax.add_patch(circ1)
+ax.add_patch(circ2)
+
+ax.set_xlim(0, 100)
+ax.set_ylim(0, 100)
+
+ax.set_title('Gravitational Potential')
+ax.set_xlabel('x [Mpc]')
+ax.set_ylabel('y [Mpc]')
 
 
-fig, ax = plt.subplots(figsize = (6, 6))
-ax.imshow(pot)
+#put tickmarks back to real scale
+#they got changed because of step sizes for mesh grid
+ax.set_xticks(np.arange(0, 101, 10))
+ax.set_yticks(np.arange(0, 101, 10))
+
+ax.set_xticklabels(np.arange(0, 11, 1))
+ax.set_yticklabels(np.arange(0, 11, 1))
+
 plt.show()
-#plt.show()
