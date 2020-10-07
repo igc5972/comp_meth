@@ -60,11 +60,10 @@ X, Y = np.meshgrid(x, y)
 
 rho = np.zeros_like(X) #holder for densities everywhere in square
 pot = np.ones_like(X)
-#enforce boundary conditions given in problem
-pot[:][0] = 0
-pot[:][-1] = 0
-pot[0][:] = 0
-pot[-1][:] = 0
+
+#Boundary conditions
+pot[0,:-1], pot[:-1,-1], pot[-1,::-1], pot[-2:0:-1,0] = 0, 0, 0, 0
+
 
 #constrain positions of disks
 disk1, disk2 = np.zeros_like(X), np.zeros_like(X)
@@ -84,17 +83,15 @@ pot = np.copy(rho) #initalize it as the same as rho
 
 step = 0.1
 max_time = 100
-for time_step in range(max_time):
-    for i in range(1, len(x)-1):
-        for j in range(1, len(y)-1):
-            pot[i][j] = (pot[i+1][j] + pot[i][j+1] + pot[i-1][j] + pot[i][j-1] - constant * step**2 * rho[i][j])/4
-            #Enforce boundaries with every iteration
-            #pot[disk1] = p1
-            #pot[disk2] = p2
-            pot[:][0] = 0
-            pot[:][-1] = 0
-            pot[0][:] = 0
-            pot[-1][:] = 0
+for time_step in range(max_time): #iterate  through to big time
+    for i in range(0, len(x)-1):
+        for j in range(0, len(y)-1):
+            pot[i][j] = (pot[i+1][j] + pot[i][j+1] + pot[i-1][j] + pot[i][j-1] \
+                          - constant * step**2 * rho[i][j])/4
+            #Enforce boundaries again with every iteration
+            pot[0,:-1], pot[:-1,-1], pot[-1,::-1], pot[-2:0:-1,0] = 0, 0, 0, 0
+
+
 ################################################################################
 ### Plotting
 ################################################################################
